@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group 'org.jubaroo.mods.wurm'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "http://gotti.no-ip.org/maven/repository" }
+}
+
+dependencies {
+    compile 'org.gotti.wurmunlimited:server-modlauncher:0.40'
+}
+
+jar {
+    archiveName "${project.name}.jar"
+}
+
+task pack(type: Zip) {
+    from fileTree(dir: 'pack', include: '**')
+    destinationDir = file("build/pack")
+    archiveName "shop-sign_additions.zip"
+}
+
+task dist(type: Zip) {
+    into("mods", {
+        into(project.name, {
+            from jar
+            from pack
+        })
+        from fileTree(dir: 'mods', include: '*')
+    })
+    archiveName "${project.name}-${project.version}.zip"
+}
